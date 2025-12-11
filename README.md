@@ -1,3 +1,5 @@
+Maven vytvoří spustitelný jar file se všemi závislostmi.
+
 Nejasné zadání:
 použít LOGGER: který? Použil jsem java.util.Logger, ale je možno použít třeba log4j2 Logger
 
