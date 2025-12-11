@@ -37,7 +37,7 @@ public class PrimeNumbersReader {
 		File inputFile = new File(args[0]);
 		LOG.info("Reading input file: " + inputFile);
 		if (!inputFile.exists()) {
-			LOG.log(Level.SEVERE, "File " + inputFile + "doesn't exist!");
+			LOG.log(Level.SEVERE, "File " + inputFile + " doesn't exist!");
 			System.exit(0);
 		}
 
@@ -49,7 +49,7 @@ public class PrimeNumbersReader {
 
 	/**
 	 * @param file .xlsx to import
-	 * @return the list of the positive decimal numbes from the first sheet, column
+	 * @return the list of the positive decimal numbers from the first sheet, column
 	 *         B (without header)
 	 */
 	static List<Integer> importNumbersFromXlsx(File file) {
