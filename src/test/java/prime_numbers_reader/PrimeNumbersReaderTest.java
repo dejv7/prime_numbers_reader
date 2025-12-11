@@ -74,7 +74,7 @@ public class PrimeNumbersReaderTest {
 	public void TestImportXsls() {
 		File input = new File("vzorek_dat.xlsx");
 		List<Integer> result = PrimeNumbersReader.importNumbersFromXlsx(input);
-		assertEquals(result.size(), 15);
+		assertEquals(16, result.size());
 	}
 
 	@Test

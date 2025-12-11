@@ -104,6 +104,12 @@ public class PrimeNumbersReader {
 		}
 	}
 
+	/**
+	 * Check if number is prime
+	 * 
+	 * @param number
+	 * @return true if number is prime
+	 */
 	static boolean isPrime(int number) {
 		if (number <= 1)
 			return false;
