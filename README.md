@@ -1,3 +1,9 @@
+Edit:
+Program byl přepracován:
+- zpracování velkých čísel
+- lepší správa paměti - SAX parser, výsledek se neukládá, ale rovnou vypisuje
+
+
 Maven vytvoří spustitelný jar file se všemi závislostmi.
 
 Nejasné zadání:
