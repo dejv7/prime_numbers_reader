@@ -5,10 +5,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.List;
+import java.util.StringJoiner;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.junit.Test;
+
+import prime_numbers_reader.utils.Utils;
 
 public class PrimeNumbersReaderTest {
 	private int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73,
@@ -71,21 +77,95 @@ public class PrimeNumbersReaderTest {
 			33, 34, 35, 36, 38, 39, 40, 42, 44, 45, 46, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 60, 62, 63 };
 
 	@Test
-	public void TestImportXsls() {
-		File input = new File("vzorek_dat.xlsx");
-		List<Integer> result = PrimeNumbersReader.importNumbersFromXlsx(input);
-		assertEquals(16, result.size());
-	}
-
-	@Test
 	public void TestPrimeNumbers() {
-		assertFalse(PrimeNumbersReader.isPrime(1));
-		Arrays.stream(primes).forEach(number -> assertTrue(PrimeNumbersReader.isPrime(number)));
+		assertTrue(Utils.isPrime(new BigInteger("9223372036854775837")));
+		Arrays.stream(primes).forEach(number -> assertTrue(Utils.isPrime(BigInteger.valueOf(number))));
 	}
 
 	@Test
 	public void TestNonPrimeNumbers() {
-		Arrays.stream(nonPrimes).forEach(number -> assertFalse(PrimeNumbersReader.isPrime(number)));
+		assertFalse(Utils.isPrime(BigInteger.valueOf(1)));
+		assertFalse(Utils.isPrime(BigInteger.valueOf(-3)));
+		Arrays.stream(nonPrimes).forEach(number -> assertFalse(Utils.isPrime(BigInteger.valueOf(number))));
 	}
 
+	@Test
+	public void TestImportNonexistingXsls() {
+		Logger logger = Logger.getLogger(PrimeNumbersContentHandler.class.getName());
+
+		// Custom handler to capture logs
+		PrimeNumbersLogHandler handler = new PrimeNumbersLogHandler();
+		logger.addHandler(handler);
+		File input = new File("vzorek_dat_xx.xlsx");
+		PrimeNumbersReader.importNumbersFromXlsxAndLogPrimes(input);
+		assertEquals("", handler.getResult());
+		logger.removeHandler(handler);
+	}
+
+	@Test
+	public void TestImportEmptyXsls() {
+		Logger logger = Logger.getLogger(PrimeNumbersContentHandler.class.getName());
+
+		// Custom handler to capture logs
+		PrimeNumbersLogHandler handler = new PrimeNumbersLogHandler();
+		logger.addHandler(handler);
+		File input = new File("src/test/resources/vzorek_dat_empty.xlsx");
+		PrimeNumbersReader.importNumbersFromXlsxAndLogPrimes(input);
+		assertEquals("", handler.getResult());
+		logger.removeHandler(handler);
+	}
+
+	@Test
+	public void TestImportXsls2() {
+		Logger logger = Logger.getLogger(PrimeNumbersContentHandler.class.getName());
+
+		// Custom handler to capture logs
+		PrimeNumbersLogHandler handler = new PrimeNumbersLogHandler();
+		logger.addHandler(handler);
+		File input = new File("src/test/resources/vzorek_dat_test.xlsx");
+		PrimeNumbersReader.importNumbersFromXlsxAndLogPrimes(input);
+		assertEquals("11, 9223372036854775837", handler.getResult());
+		logger.removeHandler(handler);
+	}
+
+	@Test
+	public void TestImportXsls() {
+		Logger logger = Logger.getLogger(PrimeNumbersContentHandler.class.getName());
+
+		// Custom handler to capture logs
+		PrimeNumbersLogHandler handler = new PrimeNumbersLogHandler();
+		logger.addHandler(handler);
+		File input = new File("vzorek_dat.xlsx");
+		PrimeNumbersReader.importNumbersFromXlsxAndLogPrimes(input);
+		assertEquals("5645657, 15619, 1234187, 211, 7, 9788677, 23311, 54881, 2147483647", handler.getResult());
+		logger.removeHandler(handler);
+	}
+
+	class PrimeNumbersLogHandler extends Handler {
+		private StringJoiner joiner = new StringJoiner(", ");
+
+		@Override
+		public void publish(LogRecord record) {
+			String message = record.getMessage();
+			if (message != null) {
+				joiner.add(message);
+			}
+		}
+
+		@Override
+		public void flush() {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void close() throws SecurityException {
+			// TODO Auto-generated method stub
+
+		}
+
+		public String getResult() {
+			return joiner.toString();
+		}
+	}
 }
